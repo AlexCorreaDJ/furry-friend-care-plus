@@ -1,13 +1,13 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Calendar, Syringe, Heart, Users, BookOpen } from "lucide-react";
+import { ArrowLeft, Calendar, Syringe, Heart, Users, BookOpen, GraduationCap } from "lucide-react";
 import VaccinationCard from './VaccinationCard';
 import TimelineCard from './TimelineCard';
 import CareScheduleCard from './CareScheduleCard';
 import VetProfileCard from './VetProfileCard';
 import TutorialsScreen from './TutorialsScreen';
+import DevelopmentTrainingScreen from './DevelopmentTrainingScreen';
 
 interface PetDashboardProps {
   pet: any;
@@ -15,7 +15,7 @@ interface PetDashboardProps {
 }
 
 const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
-  const [activeScreen, setActiveScreen] = useState<'dashboard' | 'tutorials'>('dashboard');
+  const [activeScreen, setActiveScreen] = useState<'dashboard' | 'tutorials' | 'development'>('dashboard');
 
   const calculateAge = (birthDate: string) => {
     if (!birthDate) return '0 meses';
@@ -38,6 +38,10 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
     return <TutorialsScreen onBack={() => setActiveScreen('dashboard')} />;
   }
 
+  if (activeScreen === 'development') {
+    return <DevelopmentTrainingScreen pet={pet} onBack={() => setActiveScreen('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -51,13 +55,23 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
             Voltar aos Pets
           </Button>
           
-          <Button 
-            onClick={() => setActiveScreen('tutorials')}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-          >
-            <BookOpen className="h-4 w-4" />
-            Tutoriais
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => setActiveScreen('development')}
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+            >
+              <GraduationCap className="h-4 w-4" />
+              Desenvolvimento
+            </Button>
+            
+            <Button 
+              onClick={() => setActiveScreen('tutorials')}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+            >
+              <BookOpen className="h-4 w-4" />
+              Tutoriais
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-8">
