@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Syringe, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 import AddVaccineDialog from './AddVaccineDialog';
 import EditVaccinationDialog from './EditVaccinationDialog';
+import VaccinationDetailsModal from './VaccinationDetailsModal';
 
 const VaccinationCard = ({ pet }) => {
   const [vaccinations, setVaccinations] = useState([
@@ -13,7 +14,10 @@ const VaccinationCard = ({ pet }) => {
       expectedDate: '2024-05-15',
       status: 'applied',
       appliedDate: '2024-05-15',
-      nextDue: null
+      nextDue: null,
+      manufacturer: 'Zoetis',
+      batch: 'LOT123456',
+      proofPhoto: null
     },
     {
       id: 2,
@@ -21,7 +25,10 @@ const VaccinationCard = ({ pet }) => {
       expectedDate: '2024-06-10',
       status: 'applied',
       appliedDate: '2024-06-10',
-      nextDue: null
+      nextDue: null,
+      manufacturer: 'Zoetis',
+      batch: 'LOT123457',
+      proofPhoto: null
     },
     {
       id: 3,
@@ -29,7 +36,10 @@ const VaccinationCard = ({ pet }) => {
       expectedDate: '2024-07-15',
       status: 'pending',
       appliedDate: null,
-      nextDue: '2024-07-15'
+      nextDue: '2024-07-15',
+      manufacturer: null,
+      batch: null,
+      proofPhoto: null
     },
     {
       id: 4,
@@ -37,9 +47,15 @@ const VaccinationCard = ({ pet }) => {
       expectedDate: '2025-05-15',
       status: 'upcoming',
       appliedDate: null,
-      nextDue: '2025-05-15'
+      nextDue: '2025-05-15',
+      manufacturer: null,
+      batch: null,
+      proofPhoto: null
     }
   ]);
+
+  const [selectedVaccination, setSelectedVaccination] = useState(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const handleAddVaccine = (newVaccine) => {
     setVaccinations([...vaccinations, newVaccine]);
@@ -47,6 +63,11 @@ const VaccinationCard = ({ pet }) => {
 
   const handleUpdateVaccinations = (updatedVaccinations) => {
     setVaccinations(updatedVaccinations);
+  };
+
+  const handleVaccinationClick = (vaccination) => {
+    setSelectedVaccination(vaccination);
+    setDetailsModalOpen(true);
   };
 
   const getStatusColor = (status) => {
@@ -140,7 +161,10 @@ const VaccinationCard = ({ pet }) => {
                   
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                    <div 
+                      className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleVaccinationClick(vaccination)}
+                    >
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">{vaccination.name}</h3>
                         <Badge className={getStatusBadgeColor(vaccination.status)}>
@@ -207,6 +231,13 @@ const VaccinationCard = ({ pet }) => {
           </ul>
         </CardContent>
       </Card>
+
+      {/* Vaccination Details Modal */}
+      <VaccinationDetailsModal
+        vaccination={selectedVaccination}
+        open={detailsModalOpen}
+        onOpenChange={setDetailsModalOpen}
+      />
     </div>
   );
 };
