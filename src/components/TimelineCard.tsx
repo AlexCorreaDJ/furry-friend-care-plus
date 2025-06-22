@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Heart, Medicine, Vaccine } from "lucide-react";
+import { Calendar, Heart, Pill, Syringe } from "lucide-react";
 
 const TimelineCard = ({ pet }) => {
   const getAgeInMonths = (birthDate) => {
@@ -32,7 +31,7 @@ const TimelineCard = ({ pet }) => {
       ageRange: [2, 4],
       title: 'Protocolo de Vacinação',
       description: 'Período crítico para imunização básica',
-      icon: Vaccine,
+      icon: Syringe,
       status: currentAge >= 4 ? 'completed' : currentAge >= 2 ? 'current' : 'upcoming',
       tasks: [
         'V10 - 1ª dose (45 dias)',
@@ -58,7 +57,7 @@ const TimelineCard = ({ pet }) => {
       ageRange: [6, 12],
       title: 'Castração e Cuidados',
       description: 'Período recomendado para castração',
-      icon: Medicine,
+      icon: Pill,
       status: currentAge >= 12 ? 'completed' : currentAge >= 6 ? 'current' : 'upcoming',
       tasks: [
         'Avaliar castração (6-8 meses)',

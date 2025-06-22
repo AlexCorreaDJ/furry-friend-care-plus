@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Vaccine, Heart, Dog, Cat, Plus } from "lucide-react";
+import { ArrowLeft, Calendar, Syringe, Heart, Dog, Cat, Plus } from "lucide-react";
 import VaccinationCard from '@/components/VaccinationCard';
 import TimelineCard from '@/components/TimelineCard';
 import VetProfileCard from '@/components/VetProfileCard';
@@ -13,7 +13,7 @@ const PetDashboard = ({ pet, onBack }) => {
 
   const tabs = [
     { id: 'overview', label: 'Visão Geral', icon: Heart },
-    { id: 'vaccination', label: 'Vacinação', icon: Vaccine },
+    { id: 'vaccination', label: 'Vacinação', icon: Syringe },
     { id: 'timeline', label: 'Linha do Tempo', icon: Calendar },
     { id: 'vet', label: 'Veterinário', icon: Heart }
   ];
@@ -64,7 +64,7 @@ const PetDashboard = ({ pet, onBack }) => {
               <Card>
                 <CardContent className="p-4 text-center">
                   <div className="bg-green-100 rounded-full w-12 h-12 mx-auto mb-2 flex items-center justify-center">
-                    <Vaccine className="h-6 w-6 text-green-600" />
+                    <Syringe className="h-6 w-6 text-green-600" />
                   </div>
                   <h3 className="font-semibold text-gray-900">Vacinas em Dia</h3>
                   <p className="text-2xl font-bold text-green-600">3/5</p>
@@ -101,7 +101,7 @@ const PetDashboard = ({ pet, onBack }) => {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                     <div className="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center">
-                      <Vaccine className="h-4 w-4 text-white" />
+                      <Syringe className="h-4 w-4 text-white" />
                     </div>
                     <div>
                       <p className="font-medium">Vacina V10 aplicada</p>

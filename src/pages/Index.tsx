@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Calendar, Vaccine, Dog, Cat, Plus } from "lucide-react";
+import { Heart, Calendar, Syringe, Dog, Cat, Plus } from "lucide-react";
 import { useState } from 'react';
 import PetRegistration from '@/components/PetRegistration';
 import PetDashboard from '@/components/PetDashboard';
@@ -88,7 +88,7 @@ const Index = () => {
               <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader className="text-center">
                   <div className="bg-blue-100 rounded-full w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                    <Vaccine className="h-6 w-6 text-blue-600" />
+                    <Syringe className="h-6 w-6 text-blue-600" />
                   </div>
                   <CardTitle className="text-lg">Carteira de Vacinação</CardTitle>
                 </CardHeader>

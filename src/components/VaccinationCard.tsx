@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Vaccine, Plus, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import { Syringe, Plus, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 
 const VaccinationCard = ({ pet }) => {
   const [vaccinations, setVaccinations] = useState([
@@ -76,7 +76,7 @@ const VaccinationCard = ({ pet }) => {
       case 'scheduled':
         return <Calendar className="h-4 w-4" />;
       default:
-        return <Vaccine className="h-4 w-4" />;
+        return <Syringe className="h-4 w-4" />;
     }
   };
 
@@ -91,7 +91,7 @@ const VaccinationCard = ({ pet }) => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Vaccine className="h-5 w-5 text-blue-500" />
+              <Syringe className="h-5 w-5 text-blue-500" />
               Carteira de Vacinação
             </CardTitle>
             <Button className="bg-green-500 hover:bg-green-600">
