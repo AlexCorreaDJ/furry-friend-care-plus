@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AddVaccineDialogProps {
@@ -19,7 +19,10 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
     expectedDate: '',
     status: 'pending',
     appliedDate: '',
-    nextDue: ''
+    nextDue: '',
+    manufacturer: '',
+    batch: '',
+    proofPhoto: null as string | null
   });
   const { toast } = useToast();
 
@@ -41,7 +44,10 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
       expectedDate: formData.expectedDate,
       status: formData.status,
       appliedDate: formData.status === 'applied' ? formData.appliedDate || formData.expectedDate : null,
-      nextDue: formData.status === 'pending' ? formData.expectedDate : (formData.nextDue || null)
+      nextDue: formData.status === 'pending' ? formData.expectedDate : (formData.nextDue || null),
+      manufacturer: formData.manufacturer || null,
+      batch: formData.batch || null,
+      proofPhoto: formData.proofPhoto
     };
 
     onAddVaccine(newVaccine);
@@ -50,7 +56,10 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
       expectedDate: '',
       status: 'pending',
       appliedDate: '',
-      nextDue: ''
+      nextDue: '',
+      manufacturer: '',
+      batch: '',
+      proofPhoto: null
     });
     setOpen(false);
     
@@ -58,6 +67,17 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
       title: "Sucesso",
       description: "Vacina adicionada com sucesso!",
     });
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setFormData({...formData, proofPhoto: event.target?.result as string});
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -68,7 +88,7 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
           Adicionar Vacina
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Adicionar Nova Vacina</DialogTitle>
         </DialogHeader>
@@ -132,6 +152,57 @@ const AddVaccineDialog = ({ onAddVaccine }: AddVaccineDialogProps) => {
               />
             </div>
           )}
+
+          <div className="space-y-2">
+            <Label htmlFor="manufacturer">Fabricante (opcional)</Label>
+            <Input
+              id="manufacturer"
+              value={formData.manufacturer}
+              onChange={(e) => setFormData({...formData, manufacturer: e.target.value})}
+              placeholder="Ex: Zoetis, Merial"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="batch">Lote (opcional)</Label>
+            <Input
+              id="batch"
+              value={formData.batch}
+              onChange={(e) => setFormData({...formData, batch: e.target.value})}
+              placeholder="Ex: LOT123456"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="proofPhoto">Comprovante (opcional)</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="proofPhoto"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('proofPhoto')?.click()}
+                className="w-full"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {formData.proofPhoto ? 'Alterar Foto' : 'Anexar Foto'}
+              </Button>
+            </div>
+            {formData.proofPhoto && (
+              <div className="mt-2">
+                <img 
+                  src={formData.proofPhoto} 
+                  alt="Comprovante"
+                  className="max-w-full h-auto rounded-lg border border-gray-300 max-h-32"
+                />
+              </div>
+            )}
+          </div>
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
