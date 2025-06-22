@@ -6,11 +6,17 @@ import { Heart, Calendar, Syringe, Dog, Cat, Plus } from "lucide-react";
 import { useState } from 'react';
 import PetRegistration from '@/components/PetRegistration';
 import PetDashboard from '@/components/PetDashboard';
+import Auth from '@/components/Auth';
 
 const Index = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pets, setPets] = useState([]);
   const [showRegistration, setShowRegistration] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
+
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+  };
 
   const handlePetRegistered = (newPet) => {
     setPets([...pets, { ...newPet, id: Date.now() }]);
@@ -20,6 +26,11 @@ const Index = () => {
   const handlePetSelect = (pet) => {
     setSelectedPet(pet);
   };
+
+  // Show Auth screen if not authenticated
+  if (!isAuthenticated) {
+    return <Auth onAuthSuccess={handleAuthSuccess} />;
+  }
 
   if (selectedPet) {
     return <PetDashboard pet={selectedPet} onBack={() => setSelectedPet(null)} />;
