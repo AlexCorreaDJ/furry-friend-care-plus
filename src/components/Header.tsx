@@ -6,9 +6,10 @@ import { Heart, Bell, Plus } from "lucide-react";
 interface HeaderProps {
   totalNotifications: number;
   onAddPet: () => void;
+  onShowNotifications?: () => void;
 }
 
-const Header = ({ totalNotifications, onAddPet }: HeaderProps) => {
+const Header = ({ totalNotifications, onAddPet, onShowNotifications }: HeaderProps) => {
   return (
     <div className="bg-white shadow-sm border-b">
       <div className="max-w-6xl mx-auto px-4 py-6">
@@ -23,7 +24,12 @@ const Header = ({ totalNotifications, onAddPet }: HeaderProps) => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative"
+              onClick={onShowNotifications}
+            >
               <Bell className="h-5 w-5" />
               {totalNotifications > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">

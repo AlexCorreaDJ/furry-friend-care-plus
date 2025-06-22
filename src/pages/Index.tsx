@@ -3,6 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import PetRegistration from '@/components/PetRegistration';
 import PetDashboard from '@/components/PetDashboard';
+import NotificationsScreen from '@/components/NotificationsScreen';
 import Auth from '@/components/Auth';
 import Header from '@/components/Header';
 import EmptyState from '@/components/EmptyState';
@@ -13,6 +14,7 @@ const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pets, setPets] = useState([]);
   const [showRegistration, setShowRegistration] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
 
   const handleAuthSuccess = () => {
@@ -69,6 +71,15 @@ const Index = () => {
     return <Auth onAuthSuccess={handleAuthSuccess} />;
   }
 
+  if (showNotifications) {
+    return (
+      <NotificationsScreen 
+        pets={pets}
+        onBack={() => setShowNotifications(false)} 
+      />
+    );
+  }
+
   if (selectedPet) {
     return <PetDashboard pet={selectedPet} onBack={() => setSelectedPet(null)} />;
   }
@@ -87,6 +98,7 @@ const Index = () => {
       <Header
         totalNotifications={getTotalNotifications()}
         onAddPet={() => setShowRegistration(true)}
+        onShowNotifications={() => setShowNotifications(true)}
       />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
