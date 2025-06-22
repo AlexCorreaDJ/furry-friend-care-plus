@@ -47,7 +47,7 @@ const Index = () => {
     
     const today = new Date();
     const birth = new Date(birthDate);
-    const diffTime = Math.abs(today - birth);
+    const diffTime = Math.abs(today.getTime() - birth.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const diffMonths = Math.floor(diffDays / 30);
     const diffYears = Math.floor(diffMonths / 12);
