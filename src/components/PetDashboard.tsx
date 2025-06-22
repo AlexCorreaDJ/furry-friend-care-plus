@@ -65,12 +65,12 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                {pet.name?.charAt(0).toUpperCase() || 'P'}
+                {pet?.name?.charAt(0).toUpperCase() || 'P'}
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{pet.name}</h1>
-                <p className="text-gray-600 capitalize">{pet.breed}</p>
-                <p className="text-sm text-gray-500">{calculateAge(pet.birthDate)}</p>
+                <h1 className="text-2xl font-bold text-gray-900">{pet?.name || 'Pet'}</h1>
+                <p className="text-gray-600 capitalize">{pet?.breed || 'Raça não informada'}</p>
+                <p className="text-sm text-gray-500">{calculateAge(pet?.birthDate)}</p>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
             </TabsContent>
 
             <TabsContent value="veterinario">
-              <VetProfileCard />
+              <VetProfileCard pet={pet} />
             </TabsContent>
           </Tabs>
         </div>
