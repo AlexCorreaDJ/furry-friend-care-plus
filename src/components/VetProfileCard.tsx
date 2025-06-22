@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Heart, Phone, MapPin, Plus, Calendar } from "lucide-react";
+import AddConsultationDialog from './AddConsultationDialog';
 
 const VetProfileCard = ({ pet }) => {
   const [vetInfo, setVetInfo] = useState({
@@ -36,6 +37,14 @@ const VetProfileCard = ({ pet }) => {
 
   const handleInputChange = (field, value) => {
     setVetInfo(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddConsultation = (newConsultation) => {
+    const consultation = {
+      id: Date.now(),
+      ...newConsultation
+    };
+    setConsultations(prev => [consultation, ...prev]);
   };
 
   const formatDate = (dateString) => {
@@ -187,10 +196,7 @@ const VetProfileCard = ({ pet }) => {
               <Calendar className="h-5 w-5 text-green-500" />
               Histórico de Consultas
             </CardTitle>
-            <Button className="bg-green-500 hover:bg-green-600">
-              <Plus className="h-4 w-4 mr-2" />
-              Nova Consulta
-            </Button>
+            <AddConsultationDialog onAddConsultation={handleAddConsultation} />
           </div>
         </CardHeader>
         <CardContent>
@@ -201,13 +207,17 @@ const VetProfileCard = ({ pet }) => {
                   <h3 className="font-semibold text-gray-900">{consultation.reason}</h3>
                   <span className="text-sm text-gray-500">{formatDate(consultation.date)}</span>
                 </div>
-                <p className="text-gray-600 text-sm mb-2">{consultation.observations}</p>
-                <div className="flex items-center gap-2">
-                  <div className="bg-blue-100 rounded-full w-6 h-6 flex items-center justify-center">
-                    <Heart className="h-3 w-3 text-blue-600" />
+                {consultation.observations && (
+                  <p className="text-gray-600 text-sm mb-2">{consultation.observations}</p>
+                )}
+                {consultation.vet && (
+                  <div className="flex items-center gap-2">
+                    <div className="bg-blue-100 rounded-full w-6 h-6 flex items-center justify-center">
+                      <Heart className="h-3 w-3 text-blue-600" />
+                    </div>
+                    <span className="text-xs text-gray-500">{consultation.vet}</span>
                   </div>
-                  <span className="text-xs text-gray-500">{consultation.vet}</span>
-                </div>
+                )}
               </div>
             ))}
             
