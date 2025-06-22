@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Dog, Scale, Syringe, CheckCircle, BookOpen, Calendar, Plus } from "lucide-react";
+import BasicTrainingTutorial from './BasicTrainingTutorial';
+import WeightControlScreen from './WeightControlScreen';
 
 interface DevelopmentTrainingScreenProps {
   pet: any;
@@ -12,6 +14,7 @@ interface DevelopmentTrainingScreenProps {
 
 const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenProps) => {
   const [completedItems, setCompletedItems] = useState<string[]>([]);
+  const [activeScreen, setActiveScreen] = useState<'main' | 'training' | 'weight' | 'vaccination'>('main');
 
   const toggleItemComplete = (itemId: string) => {
     setCompletedItems(prev => 
@@ -19,6 +22,12 @@ const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenPro
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
     );
+  };
+
+  const handleNavigateToVaccination = () => {
+    // Navigate back to main dashboard and switch to vaccination tab
+    onBack();
+    // This would ideally trigger the vaccination tab in the parent component
   };
 
   const trainingItems = [
@@ -29,7 +38,8 @@ const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenPro
       description: 'Ensine comandos como sentar, deitar, ficar e vir. Reforce com petiscos e treinos curtos e diários.',
       buttonText: 'Ver tutorial completo',
       color: 'bg-blue-500',
-      lightColor: 'bg-blue-50 border-blue-200'
+      lightColor: 'bg-blue-50 border-blue-200',
+      action: () => setActiveScreen('training')
     },
     {
       id: 'weight-control',
@@ -38,7 +48,8 @@ const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenPro
       description: 'Acompanhe o peso do seu pet para evitar obesidade. Consulte o veterinário para ajustar a alimentação.',
       buttonText: 'Registrar novo peso',
       color: 'bg-green-500',
-      lightColor: 'bg-green-50 border-green-200'
+      lightColor: 'bg-green-50 border-green-200',
+      action: () => setActiveScreen('weight')
     },
     {
       id: 'vaccine-boosters',
@@ -47,9 +58,19 @@ const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenPro
       description: 'Nessa fase, o pet deve receber reforço das vacinas aplicadas no primeiro ano, como a antirrábica e V10.',
       buttonText: 'Ver carteira de vacinação',
       color: 'bg-purple-500',
-      lightColor: 'bg-purple-50 border-purple-200'
+      lightColor: 'bg-purple-50 border-purple-200',
+      action: handleNavigateToVaccination
     }
   ];
+
+  // Render sub-screens
+  if (activeScreen === 'training') {
+    return <BasicTrainingTutorial onBack={() => setActiveScreen('main')} />;
+  }
+
+  if (activeScreen === 'weight') {
+    return <WeightControlScreen pet={pet} onBack={() => setActiveScreen('main')} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
@@ -145,8 +166,7 @@ const DevelopmentTrainingScreen = ({ pet, onBack }: DevelopmentTrainingScreenPro
                       className={`${item.color} hover:opacity-90 text-white flex items-center gap-2`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Aqui você pode adicionar navegação para outras telas
-                        console.log(`Navegando para: ${item.buttonText}`);
+                        item.action();
                       }}
                     >
                       {item.id === 'basic-training' && <BookOpen className="h-4 w-4" />}
