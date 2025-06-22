@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -303,7 +302,7 @@ const TimelineCard = ({ pet }: TimelineCardProps) => {
                               {milestone.text}
                             </span>
                             {milestone.critical && (
-                              <AlertTriangle className="h-3 w-3 text-orange-500" title="Marco crítico" />
+                              <AlertTriangle className="h-3 w-3 text-orange-500" />
                             )}
                           </div>
                         );
