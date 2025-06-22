@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Calendar, Syringe, Heart, Users, BookOpen } from "lucide-react";
-import PetCard from './PetCard';
 import VaccinationCard from './VaccinationCard';
 import TimelineCard from './TimelineCard';
 import CareScheduleCard from './CareScheduleCard';
@@ -17,6 +16,23 @@ interface PetDashboardProps {
 
 const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
   const [activeScreen, setActiveScreen] = useState<'dashboard' | 'tutorials'>('dashboard');
+
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return '0 meses';
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    const diffTime = Math.abs(today.getTime() - birth.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffMonths / 12);
+    
+    if (diffYears > 0) {
+      return `${diffYears} ano${diffYears > 1 ? 's' : ''}`;
+    } else {
+      return `${diffMonths} mes${diffMonths !== 1 ? 'es' : ''}`;
+    }
+  };
 
   if (activeScreen === 'tutorials') {
     return <TutorialsScreen onBack={() => setActiveScreen('dashboard')} />;
@@ -45,7 +61,19 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
         </div>
 
         <div className="space-y-8">
-          <PetCard pet={pet} />
+          {/* Pet Info Card */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                {pet.name?.charAt(0).toUpperCase() || 'P'}
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{pet.name}</h1>
+                <p className="text-gray-600 capitalize">{pet.breed}</p>
+                <p className="text-sm text-gray-500">{calculateAge(pet.birthDate)}</p>
+              </div>
+            </div>
+          </div>
 
           <Tabs defaultValue="vacinacao" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
