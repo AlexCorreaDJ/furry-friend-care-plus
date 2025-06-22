@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Syringe, Heart, Dog, Cat, Plus } from "lucide-react";
+import { ArrowLeft, Calendar, Syringe, Heart, Dog, Cat, Plus, Clock } from "lucide-react";
 import VaccinationCard from '@/components/VaccinationCard';
 import TimelineCard from '@/components/TimelineCard';
 import VetProfileCard from '@/components/VetProfileCard';
+import CareScheduleCard from '@/components/CareScheduleCard';
 
 const PetDashboard = ({ pet, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -15,6 +16,7 @@ const PetDashboard = ({ pet, onBack }) => {
     { id: 'overview', label: 'Visão Geral', icon: Heart },
     { id: 'vaccination', label: 'Vacinação', icon: Syringe },
     { id: 'timeline', label: 'Linha do Tempo', icon: Calendar },
+    { id: 'schedule', label: 'Cronograma', icon: Clock },
     { id: 'vet', label: 'Veterinário', icon: Heart }
   ];
 
@@ -30,6 +32,8 @@ const PetDashboard = ({ pet, onBack }) => {
         return <VaccinationCard pet={pet} />;
       case 'timeline':
         return <TimelineCard pet={pet} />;
+      case 'schedule':
+        return <CareScheduleCard pet={pet} />;
       case 'vet':
         return <VetProfileCard pet={pet} />;
       default:
