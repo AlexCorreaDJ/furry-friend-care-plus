@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useState } from 'react';
 import PetRegistration from '@/components/PetRegistration';
@@ -42,6 +41,11 @@ const Index = () => {
     setSelectedPet(pet);
   };
 
+  const handlePetDelete = (petId) => {
+    setPets(pets.filter(pet => pet.id !== petId));
+    setSelectedPet(null);
+  };
+
   const calculateAge = (birthDate) => {
     if (!birthDate) return 'Idade não informada';
     
@@ -81,7 +85,13 @@ const Index = () => {
   }
 
   if (selectedPet) {
-    return <PetDashboard pet={selectedPet} onBack={() => setSelectedPet(null)} />;
+    return (
+      <PetDashboard 
+        pet={selectedPet} 
+        onBack={() => setSelectedPet(null)}
+        onDelete={handlePetDelete}
+      />
+    );
   }
 
   if (showRegistration) {

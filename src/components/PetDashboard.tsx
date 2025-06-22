@@ -1,7 +1,19 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Calendar, Syringe, Heart, Users, BookOpen, GraduationCap } from "lucide-react";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, Calendar, Syringe, Heart, Users, BookOpen, GraduationCap, Trash2 } from "lucide-react";
 import VaccinationCard from './VaccinationCard';
 import TimelineCard from './TimelineCard';
 import CareScheduleCard from './CareScheduleCard';
@@ -12,9 +24,10 @@ import DevelopmentTrainingScreen from './DevelopmentTrainingScreen';
 interface PetDashboardProps {
   pet: any;
   onBack: () => void;
+  onDelete: (petId: number) => void;
 }
 
-const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
+const PetDashboard = ({ pet, onBack, onDelete }: PetDashboardProps) => {
   const [activeScreen, setActiveScreen] = useState<'dashboard' | 'tutorials' | 'development'>('dashboard');
 
   const calculateAge = (birthDate: string) => {
@@ -32,6 +45,10 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
     } else {
       return `${diffMonths} mes${diffMonths !== 1 ? 'es' : ''}`;
     }
+  };
+
+  const handleDeletePet = () => {
+    onDelete(pet.id);
   };
 
   if (activeScreen === 'tutorials') {
@@ -71,6 +88,32 @@ const PetDashboard = ({ pet, onBack }: PetDashboardProps) => {
               <BookOpen className="h-4 w-4" />
               Tutoriais
             </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button 
+                  variant="destructive"
+                  className="flex items-center gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Excluir Pet
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir Pet</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja excluir {pet?.name}? Esta ação não pode ser desfeita e todos os dados do pet serão perdidos permanentemente.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeletePet} className="bg-red-600 hover:bg-red-700">
+                    Excluir
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
 
