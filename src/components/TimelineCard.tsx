@@ -1,114 +1,119 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Heart, Pill, Syringe } from "lucide-react";
+import { Syringe, Heart, Scissors, Shield, Calendar, Users } from "lucide-react";
 import TimelineEvent from './TimelineEvent';
 import TimelineTip from './TimelineTip';
 
-const TimelineCard = ({ pet }) => {
-  const getAgeInMonths = (birthDate) => {
+interface TimelineCardProps {
+  pet: any;
+}
+
+const TimelineCard = ({ pet }: TimelineCardProps) => {
+  
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return 0;
+    
     const today = new Date();
     const birth = new Date(birthDate);
-    return (today.getFullYear() - birth.getFullYear()) * 12 + today.getMonth() - birth.getMonth();
+    const diffTime = Math.abs(today.getTime() - birth.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.floor(diffDays / 30);
+    
+    return diffMonths;
   };
 
-  const currentAge = getAgeInMonths(pet.birthDate);
+  const currentAge = calculateAge(pet.birthDate);
 
   const timelineEvents = [
     {
-      age: '1-2 meses',
-      ageRange: [1, 2],
-      title: 'Primeiros Cuidados',
-      description: 'Desmame, primeiras consultas e adaptação ao novo lar',
-      icon: Heart,
-      status: currentAge >= 2 ? 'completed' : 'current',
-      tasks: [
-        'Primeira consulta veterinária',
-        'Início da ração adequada para filhotes',
-        'Adaptação ao novo ambiente'
-      ]
-    },
-    {
-      age: '2-4 meses',
-      ageRange: [2, 4],
-      title: 'Protocolo de Vacinação',
-      description: 'Período crítico para imunização básica',
+      age: "0-2 meses",
+      ageRange: [0, 2],
+      title: "Primeiras Vacinas",
+      description: "Início do protocolo vacinal básico para proteção inicial.",
       icon: Syringe,
-      status: currentAge >= 4 ? 'completed' : currentAge >= 2 ? 'current' : 'upcoming',
+      status: currentAge >= 2 ? "completed" as const : currentAge >= 0 ? "current" as const : "upcoming" as const,
       tasks: [
-        'V10 - 1ª dose (45 dias)',
-        'V10 - 2ª dose (75 dias)',
-        'Antirrábica (4 meses)'
+        "Primeira dose da V8 ou V10",
+        "Exame clínico veterinário",
+        "Orientações sobre alimentação"
       ]
     },
     {
-      age: '4-6 meses',
-      ageRange: [4, 6],
-      title: 'Desenvolvimento e Socialização',
-      description: 'Período ideal para adestramento e socialização',
+      age: "2-4 meses",
+      ageRange: [2, 4],
+      title: "Reforços e Vermifugação",
+      description: "Continuação do protocolo vacinal e controle de parasitas.",
       icon: Heart,
-      status: currentAge >= 6 ? 'completed' : currentAge >= 4 ? 'current' : 'upcoming',
+      status: currentAge >= 4 ? "completed" as const : currentAge >= 2 ? "current" as const : "upcoming" as const,
       tasks: [
-        'Início do adestramento básico',
-        'Socialização com outros animais',
-        'Troca de ração (filhote para jovem)'
+        "Segunda dose da V8/V10",
+        "Primeira dose antirrábica",
+        "Vermifugação"
       ]
     },
     {
-      age: '6-12 meses',
+      age: "4-6 meses",
+      ageRange: [4, 6],
+      title: "Socialização e Castração",
+      description: "Período ideal para socialização e procedimentos cirúrgicos.",
+      icon: Users,
+      status: currentAge >= 6 ? "completed" as const : currentAge >= 4 ? "current" as const : "upcoming" as const,
+      tasks: [
+        "Socialização controlada",
+        "Castração (se recomendado)",
+        "Terceira dose vacinal"
+      ]
+    },
+    {
+      age: "6-12 meses",
       ageRange: [6, 12],
-      title: 'Castração e Cuidados',
-      description: 'Período recomendado para castração',
-      icon: Pill,
-      status: currentAge >= 12 ? 'completed' : currentAge >= 6 ? 'current' : 'upcoming',
+      title: "Desenvolvimento e Adestramento",
+      description: "Fase de crescimento e aprendizado de comandos básicos.",
+      icon: Calendar,
+      status: currentAge >= 12 ? "completed" as const : currentAge >= 6 ? "current" as const : "upcoming" as const,
       tasks: [
-        'Avaliar castração (6-8 meses)',
-        'Consultas de acompanhamento',
-        'Mudança gradual da ração'
+        "Adestramento básico",
+        "Controle de peso",
+        "Reforços vacinais anuais"
       ]
     },
     {
-      age: '1+ anos',
+      age: "1+ anos",
       ageRange: [12, 999],
-      title: 'Vida Adulta',
-      description: 'Manutenção da saúde e reforços anuais',
-      icon: Calendar,
-      status: currentAge >= 12 ? 'current' : 'upcoming',
+      title: "Manutenção e Cuidados Adultos",
+      description: "Cuidados de rotina para manter a saúde em dia.",
+      icon: Shield,
+      status: currentAge >= 12 ? "current" as const : "upcoming" as const,
       tasks: [
-        'Reforço anual das vacinas',
-        'Consultas semestrais',
-        'Ração para adultos'
+        "Check-ups semestrais",
+        "Reforços vacinais anuais",
+        "Controle de peso e dieta"
       ]
     }
   ];
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-blue-500" />
-            Linha do Tempo de Cuidados
-          </CardTitle>
-          <p className="text-sm text-gray-600">
-            {pet.name} tem atualmente {pet.age} ({currentAge} meses)
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {timelineEvents.map((event, index) => (
-              <TimelineEvent
-                key={index}
-                event={event}
-                isLast={index === timelineEvents.length - 1}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <TimelineTip currentAge={currentAge} />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="h-5 w-5" />
+          Cronograma de Desenvolvimento
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-4">
+          {timelineEvents.map((event, index) => (
+            <TimelineEvent
+              key={index}
+              event={event}
+              isLast={index === timelineEvents.length - 1}
+            />
+          ))}
+        </div>
+        
+        <TimelineTip currentAge={currentAge} />
+      </CardContent>
+    </Card>
   );
 };
 
