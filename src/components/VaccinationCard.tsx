@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Syringe, Plus, Calendar, CheckCircle, AlertCircle, Clock, Edit } from "lucide-react";
+import { Syringe, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import AddVaccineDialog from './AddVaccineDialog';
+import EditVaccinationDialog from './EditVaccinationDialog';
 
 const VaccinationCard = ({ pet }) => {
   const [vaccinations, setVaccinations] = useState([
@@ -40,6 +40,14 @@ const VaccinationCard = ({ pet }) => {
       nextDue: '2025-05-15'
     }
   ]);
+
+  const handleAddVaccine = (newVaccine) => {
+    setVaccinations([...vaccinations, newVaccine]);
+  };
+
+  const handleUpdateVaccinations = (updatedVaccinations) => {
+    setVaccinations(updatedVaccinations);
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -108,14 +116,11 @@ const VaccinationCard = ({ pet }) => {
               Carteira de Vacinação
             </CardTitle>
             <div className="flex gap-2">
-              <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
-                <Edit className="h-4 w-4 mr-2" />
-                Editar Histórico
-              </Button>
-              <Button className="bg-green-500 hover:bg-green-600">
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Vacina
-              </Button>
+              <EditVaccinationDialog 
+                vaccinations={vaccinations}
+                onUpdateVaccinations={handleUpdateVaccinations}
+              />
+              <AddVaccineDialog onAddVaccine={handleAddVaccine} />
             </div>
           </div>
         </CardHeader>
