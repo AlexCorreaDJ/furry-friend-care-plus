@@ -8,6 +8,8 @@ import Header from '@/components/Header';
 import EmptyState from '@/components/EmptyState';
 import PetList from '@/components/PetList';
 import FloatingActionButton from '@/components/FloatingActionButton';
+import ResponsiveLayout from '@/components/ResponsiveLayout';
+import { useScreenDimensions } from '@/hooks/useScreenDimensions';
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,6 +17,7 @@ const Index = () => {
   const [showRegistration, setShowRegistration] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
+  const { isSmallScreen } = useScreenDimensions();
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
@@ -104,14 +107,14 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <ResponsiveLayout>
       <Header
         totalNotifications={getTotalNotifications()}
         onAddPet={() => setShowRegistration(true)}
         onShowNotifications={() => setShowNotifications(true)}
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className={`${isSmallScreen ? 'py-4' : 'py-8'}`}>
         {pets.length === 0 ? (
           <EmptyState onAddPet={() => setShowRegistration(true)} />
         ) : (
@@ -123,11 +126,14 @@ const Index = () => {
         )}
       </div>
 
-      {/* Floating Action Button */}
+      {/* Floating Action Button - otimizado para mobile */}
       {pets.length > 0 && (
-        <FloatingActionButton onClick={() => setShowRegistration(true)} />
+        <FloatingActionButton 
+          onClick={() => setShowRegistration(true)}
+          className="touch-optimized"
+        />
       )}
-    </div>
+    </ResponsiveLayout>
   );
 };
 

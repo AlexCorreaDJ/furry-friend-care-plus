@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +19,8 @@ import CareScheduleCard from './CareScheduleCard';
 import VetProfileCard from './VetProfileCard';
 import TutorialsScreen from './TutorialsScreen';
 import DevelopmentTrainingScreen from './DevelopmentTrainingScreen';
+import ResponsiveLayout from './ResponsiveLayout';
+import { useScreenDimensions } from '@/hooks/useScreenDimensions';
 
 interface PetDashboardProps {
   pet: any;
@@ -29,6 +30,7 @@ interface PetDashboardProps {
 
 const PetDashboard = ({ pet, onBack, onDelete }: PetDashboardProps) => {
   const [activeScreen, setActiveScreen] = useState<'dashboard' | 'tutorials' | 'development'>('dashboard');
+  const { isSmallScreen, isPortrait } = useScreenDimensions();
 
   const calculateAge = (birthDate: string) => {
     if (!birthDate) return '0 meses';
@@ -60,117 +62,118 @@ const PetDashboard = ({ pet, onBack, onDelete }: PetDashboardProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+    <ResponsiveLayout>
+      <div className={`flex ${isSmallScreen ? 'flex-col gap-4' : 'flex-row items-center justify-between'} mb-6`}>
+        <Button 
+          variant="outline" 
+          onClick={onBack}
+          className="flex items-center gap-2 touch-optimized"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar aos Pets
+        </Button>
+        
+        <div className={`flex ${isSmallScreen ? 'flex-col gap-2' : 'gap-3'}`}>
           <Button 
-            variant="outline" 
-            onClick={onBack}
-            className="flex items-center gap-2"
+            onClick={() => setActiveScreen('development')}
+            className={`flex items-center gap-2 bg-purple-600 hover:bg-purple-700 touch-optimized ${isSmallScreen ? 'w-full' : ''}`}
           >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar aos Pets
+            <GraduationCap className="h-4 w-4" />
+            Desenvolvimento
           </Button>
           
-          <div className="flex gap-3">
-            <Button 
-              onClick={() => setActiveScreen('development')}
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
-            >
-              <GraduationCap className="h-4 w-4" />
-              Desenvolvimento
-            </Button>
-            
-            <Button 
-              onClick={() => setActiveScreen('tutorials')}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-            >
-              <BookOpen className="h-4 w-4" />
-              Tutoriais
-            </Button>
+          <Button 
+            onClick={() => setActiveScreen('tutorials')}
+            className={`flex items-center gap-2 bg-green-600 hover:bg-green-700 touch-optimized ${isSmallScreen ? 'w-full' : ''}`}
+          >
+            <BookOpen className="h-4 w-4" />
+            Tutoriais
+          </Button>
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="destructive"
-                  className="flex items-center gap-2"
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="destructive"
+                className={`flex items-center gap-2 touch-optimized ${isSmallScreen ? 'w-full' : ''}`}
+              >
+                <Trash2 className="h-4 w-4" />
+                Excluir Pet
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className={isSmallScreen ? 'w-[90vw] max-w-md' : ''}>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Excluir Pet</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja excluir {pet?.name}? Esta ação não pode ser desfeita e todos os dados do pet serão perdidos permanentemente.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className={isSmallScreen ? 'flex-col gap-2' : ''}>
+                <AlertDialogCancel className={isSmallScreen ? 'w-full' : ''}>Cancelar</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleDeletePet} 
+                  className={`bg-red-600 hover:bg-red-700 ${isSmallScreen ? 'w-full' : ''}`}
                 >
-                  <Trash2 className="h-4 w-4" />
-                  Excluir Pet
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Excluir Pet</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Tem certeza que deseja excluir {pet?.name}? Esta ação não pode ser desfeita e todos os dados do pet serão perdidos permanentemente.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeletePet} className="bg-red-600 hover:bg-red-700">
-                    Excluir
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </div>
-
-        <div className="space-y-8">
-          {/* Pet Info Card */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                {pet?.name?.charAt(0).toUpperCase() || 'P'}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">{pet?.name || 'Pet'}</h1>
-                <p className="text-gray-600 capitalize">{pet?.breed || 'Raça não informada'}</p>
-                <p className="text-sm text-gray-500">{calculateAge(pet?.birthDate)}</p>
-              </div>
-            </div>
-          </div>
-
-          <Tabs defaultValue="vacinacao" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="vacinacao" className="flex items-center gap-2">
-                <Syringe className="h-4 w-4" />
-                Vacinação
-              </TabsTrigger>
-              <TabsTrigger value="cronograma" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Cronograma
-              </TabsTrigger>
-              <TabsTrigger value="cuidados" className="flex items-center gap-2">
-                <Heart className="h-4 w-4" />
-                Cuidados
-              </TabsTrigger>
-              <TabsTrigger value="veterinario" className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Veterinário
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="vacinacao">
-              <VaccinationCard pet={pet} />
-            </TabsContent>
-
-            <TabsContent value="cronograma">
-              <TimelineCard pet={pet} />
-            </TabsContent>
-
-            <TabsContent value="cuidados">
-              <CareScheduleCard pet={pet} />
-            </TabsContent>
-
-            <TabsContent value="veterinario">
-              <VetProfileCard pet={pet} />
-            </TabsContent>
-          </Tabs>
+                  Excluir
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
-    </div>
+
+      <div className="space-y-6">
+        {/* Pet Info Card - responsivo */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className={`flex items-center ${isSmallScreen ? 'flex-col text-center gap-4' : 'gap-4'}`}>
+            <div className={`${isSmallScreen ? 'w-20 h-20' : 'w-16 h-16'} bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold`}>
+              {pet?.name?.charAt(0).toUpperCase() || 'P'}
+            </div>
+            <div>
+              <h1 className={`${isSmallScreen ? 'text-xl' : 'text-2xl'} font-bold text-gray-900`}>{pet?.name || 'Pet'}</h1>
+              <p className="text-gray-600 capitalize">{pet?.breed || 'Raça não informada'}</p>
+              <p className="text-sm text-gray-500">{calculateAge(pet?.birthDate)}</p>
+            </div>
+          </div>
+        </div>
+
+        <Tabs defaultValue="vacinacao" className="space-y-6">
+          <TabsList className={`grid w-full ${isSmallScreen && isPortrait ? 'grid-cols-2 gap-1' : 'grid-cols-4'}`}>
+            <TabsTrigger value="vacinacao" className={`flex items-center gap-2 ${isSmallScreen ? 'text-xs px-2' : ''}`}>
+              <Syringe className="h-4 w-4" />
+              {isSmallScreen ? 'Vacina' : 'Vacinação'}
+            </TabsTrigger>
+            <TabsTrigger value="cronograma" className={`flex items-center gap-2 ${isSmallScreen ? 'text-xs px-2' : ''}`}>
+              <Calendar className="h-4 w-4" />
+              {isSmallScreen ? 'Tempo' : 'Cronograma'}
+            </TabsTrigger>
+            <TabsTrigger value="cuidados" className={`flex items-center gap-2 ${isSmallScreen ? 'text-xs px-2' : ''}`}>
+              <Heart className="h-4 w-4" />
+              Cuidados
+            </TabsTrigger>
+            <TabsTrigger value="veterinario" className={`flex items-center gap-2 ${isSmallScreen ? 'text-xs px-2' : ''}`}>
+              <Users className="h-4 w-4" />
+              {isSmallScreen ? 'Vet' : 'Veterinário'}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="vacinacao">
+            <VaccinationCard pet={pet} />
+          </TabsContent>
+
+          <TabsContent value="cronograma">
+            <TimelineCard pet={pet} />
+          </TabsContent>
+
+          <TabsContent value="cuidados">
+            <CareScheduleCard pet={pet} />
+          </TabsContent>
+
+          <TabsContent value="veterinario">
+            <VetProfileCard pet={pet} />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </ResponsiveLayout>
   );
 };
 

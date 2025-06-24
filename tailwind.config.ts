@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -16,6 +17,19 @@ export default {
 			screens: {
 				'2xl': '1400px'
 			}
+		},
+		screens: {
+			'xs': '320px',     // Celulares pequenos
+			'sm': '640px',     // Celulares grandes / tablets pequenos
+			'md': '768px',     // Tablets
+			'lg': '1024px',    // Laptops
+			'xl': '1280px',    // Desktops
+			'2xl': '1536px',   // Telas grandes
+			// Breakpoints personalizados para orientação
+			'portrait': {'raw': '(orientation: portrait)'},
+			'landscape': {'raw': '(orientation: landscape)'},
+			// Breakpoints para densidade de pixels
+			'retina': {'raw': '(-webkit-min-device-pixel-ratio: 2)'},
 		},
 		extend: {
 			colors: {
@@ -62,6 +76,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			spacing: {
+				'safe-top': 'var(--safe-area-inset-top)',
+				'safe-bottom': 'var(--safe-area-inset-bottom)',
+				'safe-left': 'var(--safe-area-inset-left)',
+				'safe-right': 'var(--safe-area-inset-right)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
