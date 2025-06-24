@@ -1,7 +1,5 @@
 
 import { useState } from 'react';
-import { GoogleAuth } from '@capacitor-community/google-auth';
-import { Capacitor } from '@capacitor/core';
 
 interface GoogleUser {
   id: string;
@@ -15,31 +13,27 @@ export const useGoogleAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const initializeGoogleAuth = async () => {
-    if (Capacitor.isNativePlatform()) {
-      await GoogleAuth.initialize({
-        clientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Usuário precisa configurar
-        scopes: ['profile', 'email'],
-        grantOfflineAccess: true,
-      });
-    }
+    // Placeholder para inicialização do Google Auth
+    console.log('Google Auth initialization - will be configured for native Android');
   };
 
   const signInWithGoogle = async () => {
     setIsLoading(true);
     try {
       await initializeGoogleAuth();
-      const result = await GoogleAuth.signIn();
       
-      const googleUser: GoogleUser = {
-        id: result.id,
-        email: result.email,
-        name: result.name,
-        imageUrl: result.imageUrl
+      // Simulação de login para desenvolvimento
+      // Em produção nativa, isso será substituído pela implementação real do Google Auth
+      const mockGoogleUser: GoogleUser = {
+        id: 'mock_user_id',
+        email: 'usuario@exemplo.com',
+        name: 'Usuário Teste',
+        imageUrl: 'https://via.placeholder.com/100'
       };
       
-      setUser(googleUser);
-      console.log('Google sign in success:', googleUser);
-      return googleUser;
+      setUser(mockGoogleUser);
+      console.log('Google sign in success (mock):', mockGoogleUser);
+      return mockGoogleUser;
     } catch (error) {
       console.error('Google sign in error:', error);
       throw error;
@@ -50,8 +44,8 @@ export const useGoogleAuth = () => {
 
   const signOut = async () => {
     try {
-      await GoogleAuth.signOut();
       setUser(null);
+      console.log('Google sign out success');
     } catch (error) {
       console.error('Google sign out error:', error);
     }

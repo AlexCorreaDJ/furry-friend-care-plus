@@ -1,73 +1,52 @@
 
 import { useState, useEffect } from 'react';
-import { PushNotifications } from '@capacitor/push-notifications';
-import { LocalNotifications } from '@capacitor/local-notifications';
-import { Capacitor } from '@capacitor/core';
 
 export const useNotifications = () => {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [token, setToken] = useState<string>('');
 
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      initializeNotifications();
+    // Verificar se estamos em um ambiente que suporta notificações
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      checkPermissions();
     }
   }, []);
 
+  const checkPermissions = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      setPermissionGranted(permission === 'granted');
+    } catch (error) {
+      console.error('Error checking notification permissions:', error);
+    }
+  };
+
   const initializeNotifications = async () => {
     try {
-      // Solicitar permissões para notificações push
-      const pushPermission = await PushNotifications.requestPermissions();
-      
-      if (pushPermission.receive === 'granted') {
-        setPermissionGranted(true);
-        
-        // Registrar para notificações push
-        await PushNotifications.register();
-        
-        // Solicitar permissões para notificações locais
-        await LocalNotifications.requestPermissions();
+      if (typeof window !== 'undefined' && 'Notification' in window) {
+        const permission = await Notification.requestPermission();
+        setPermissionGranted(permission === 'granted');
+        console.log('Notification permission:', permission);
       }
-
-      // Listeners para notificações
-      PushNotifications.addListener('registration', (token) => {
-        console.log('Push registration success, token: ', token.value);
-        setToken(token.value);
-      });
-
-      PushNotifications.addListener('registrationError', (error) => {
-        console.error('Error on registration: ', JSON.stringify(error));
-      });
-
-      PushNotifications.addListener('pushNotificationReceived', (notification) => {
-        console.log('Push notification received: ', JSON.stringify(notification));
-      });
-
-      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-        console.log('Push notification action performed', JSON.stringify(notification));
-      });
-
     } catch (error) {
       console.error('Error initializing notifications:', error);
     }
   };
 
-  const scheduleLocalNotification = async (title: string, body: string, scheduledAt: Date) => {
-    if (!Capacitor.isNativePlatform()) return;
+  const scheduleLocalNotification = async (title: string, body: string, scheduledAt?: Date) => {
+    if (!permissionGranted) {
+      console.warn('Notification permission not granted');
+      return;
+    }
 
     try {
-      await LocalNotifications.schedule({
-        notifications: [{
-          title,
+      // Para web, criar uma notificação simples
+      if (typeof window !== 'undefined' && 'Notification' in window) {
+        new Notification(title, {
           body,
-          id: Date.now(),
-          schedule: { at: scheduledAt },
-          sound: 'beep.wav',
-          attachments: undefined,
-          actionTypeId: '',
-          extra: null
-        }]
-      });
+          icon: '/favicon.ico'
+        });
+      }
     } catch (error) {
       console.error('Error scheduling notification:', error);
     }
