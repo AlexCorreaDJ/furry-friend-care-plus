@@ -13,7 +13,27 @@ const config: CapacitorConfig = {
     StatusBar: {
       style: 'LIGHT_CONTENT',
       backgroundColor: '#3B82F6'
+    },
+    PushNotifications: {
+      presentationOptions: ['badge', 'sound', 'alert']
+    },
+    LocalNotifications: {
+      smallIcon: 'ic_stat_icon_config_sample',
+      iconColor: '#488AFF',
+      sound: 'beep.wav'
     }
+  },
+  android: {
+    allowMixedContent: true,
+    permissions: [
+      'android.permission.INTERNET',
+      'android.permission.ACCESS_NETWORK_STATE',
+      'android.permission.VIBRATE',
+      'android.permission.RECEIVE_BOOT_COMPLETED',
+      'android.permission.WAKE_LOCK',
+      'android.permission.POST_NOTIFICATIONS',
+      'com.google.android.c2dm.permission.RECEIVE'
+    ]
   }
 };
 
